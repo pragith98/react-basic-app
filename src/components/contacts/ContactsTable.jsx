@@ -1,44 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContactTableComponentItem from "./ContactTableComponentItem";
 
 function ContactsTable() {
-    const [contactList, setContactList] = useState([
-        {
-          name: {
-            title: "Miss",
-            first: "Jennie",
-            last: "Nichols",
-          },
-          phone: "(272) 790-0888",
-          picture: {
-            thumbnail: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
-          },
-        },
-        {
-          name: {
-            title: "Miss",
-            first: "zzzzz",
-            last: "Nichols",
-          },
-          phone: "(272) 790-0828",
-          picture: {
-            thumbnail: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
-          },
-        },
-        {
-          name: {
-            title: "Miss",
-            first: "Jennie",
-            last: "Nichols",
-          },
-          phone: "(272) 790-0188",
-          picture: {
-            thumbnail: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
-          },
-        },
-      ]);
+    const [loadData, setLoadData] = useState(false);
+    const [contactList, setContactList] = useState([]);
 
-  
+  useEffect(()=>{
+    fetch("https://www.randomuser.me/api").then(Response =>{
+        return Response.json()
+    }).then(Response =>{
+        setContactList((contactList) => contactList.concat(Response.results));
+    })
+  },[loadData]);
+
+
 
   const contactListComponentList = contactList.map((item) => {
     return(
@@ -51,10 +26,18 @@ function ContactsTable() {
     )
   });
 
+  
+
+  
+
+  const addNewItem = () =>{
+    setLoadData(!loadData);
+  }
+
   return (
     <div>
       <h4>Contacts Table</h4>
-        <button type="button" class="btn btn-primary mb-1">Add New</button>
+        <button type="button" className="btn btn-primary mb-1" onClick={addNewItem}>Add New</button>
       
       <table className="table table-hover">
         <thead>
